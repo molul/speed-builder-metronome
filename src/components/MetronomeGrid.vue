@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch, type Ref } from "vue";
+import { computed, ref, watch, onMounted, onUnmounted } from "vue";
 import type { TempoPoint } from "../composables/useMetronomeEngine";
 
-// Point in the grid
 interface GridPoint {
   col: number;
   row: number;
 }
 
-// Props
 interface Props {
   cols: number;
   rows: number;
@@ -17,7 +15,7 @@ interface Props {
   endBpm: number;
   barsPerCell: number;
   tempoMap: number[];
-  playheadBar: number | Ref<number>;
+  playheadBar: any;
 }
 
 const props = defineProps<Props>();
@@ -29,166 +27,156 @@ const container = ref<HTMLDivElement | null>(null);
 const w = ref(300);
 const h = ref(500);
 
-// ====== Responsive sizing ======
 function resize() {
-  const cw = container.value?.clientWidth ?? 300;
-  const maxH = window.innerHeight * 0.7;
+  if (!container.value) return;
+  const cw = container.value.clientWidth;
   w.value = cw;
-  h.value = Math.min(maxH, cw * 2);
+  h.value = Math.min(window.innerHeight * 0.7, cw * 1.5);
 }
 
-watch(container, () => {
+onMounted(() => {
   resize();
   window.addEventListener("resize", resize);
 });
 
-// ====== Grid cell sizes ======
+onUnmounted(() => {
+  window.removeEventListener("resize", resize);
+});
+
 const cellW = computed(() => w.value / props.cols);
 const cellH = computed(() => h.value / props.rows);
 
-// ====== BPM / row conversions ======
-function bpmToRow(bpm: number): number {
-  return props.rows - Math.round((bpm - 40) / 5);
-}
-function rowToBpm(row: number): number {
-  return 40 + (props.rows - row) * 5;
-}
+const bpmToRow = (bpm: number) => props.rows - Math.round((bpm - 40) / 5);
+const rowToBpm = (row: number) => 40 + (props.rows - row) * 5;
 
-// ====== Grid points ======
 const points = ref<GridPoint[]>([
   { col: 0, row: bpmToRow(props.startBpm) },
   { col: 8, row: bpmToRow(props.maxBpm) },
   { col: 12, row: bpmToRow(props.endBpm) },
 ]);
 
+// Sync dots if props change from parent
 watch(
   () => [props.startBpm, props.maxBpm, props.endBpm],
-  () => {
-    if (!points.value[0] || !points.value[1] || !points.value[2]) return;
-    points.value[0].row = bpmToRow(props.startBpm);
-    points.value[1].row = bpmToRow(props.maxBpm);
-    points.value[2].row = bpmToRow(props.endBpm);
+  ([s, m, e]) => {
+    points.value[0].row = bpmToRow(s);
+    points.value[1].row = bpmToRow(m);
+    points.value[2].row = bpmToRow(e);
   }
 );
 
-// ====== SVG coordinates ======
-function svgPt(p: GridPoint) {
-  return {
-    x: p.col * cellW.value,
-    y: p.row * cellH.value,
-  };
-}
-
-// ====== Drag & drop ======
 const dragging = ref<number | null>(null);
 
-function clampCol(i: number, col: number) {
-  if (!points.value[0] || !points.value[1] || !points.value[2]) return col;
-
-  if (i === 0) return Math.min(col, points.value[1].col - 1);
-  if (i === 1)
-    return Math.max(
-      points.value[0].col + 1,
-      Math.min(col, points.value[2].col - 1)
-    );
-  return Math.max(col, points.value[1].col + 1);
-}
-
-function down(i: number) {
+// Mobile + Desktop start dragging
+const down = (i: number, e: MouseEvent | TouchEvent) => {
+  // Prevent scrolling while dragging on mobile
+  if (e.cancelable) e.preventDefault();
   dragging.value = i;
-}
-
-function move(e: MouseEvent) {
-  if (dragging.value === null) return;
-  const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
-  let col = Math.floor((e.clientX - r.left) / cellW.value);
-  let row = Math.floor((e.clientY - r.top) / cellH.value);
-
-  col = Math.max(0, Math.min(props.cols - 1, col));
-  row = Math.max(0, Math.min(props.rows - 1, row));
-  col = clampCol(dragging.value, col);
-
-  points.value[dragging.value] = { col, row };
-}
+};
 
 function up() {
   if (dragging.value === null) return;
-  dragging.value = null;
 
   emit(
     "update:points",
     points.value.map((p) => ({
-      bar: p.col * props.barsPerCell,
+      bar: p.col,
       bpm: rowToBpm(p.row),
     })) as [TempoPoint, TempoPoint, TempoPoint]
   );
+  dragging.value = null;
 }
 
-// ====== Line segments between points ======
-const segments = computed(() => {
-  // Ensure points has 3 elements
-  if (points.value.length < 3) return [];
+function move(e: MouseEvent | TouchEvent) {
+  if (dragging.value === null || !container.value) return;
 
-  // TypeScript knows p[0], p[1], p[2] exist
-  const p = points.value.map(svgPt) as [
-    ReturnType<typeof svgPt>,
-    ReturnType<typeof svgPt>,
-    ReturnType<typeof svgPt>
-  ];
-  const last = { x: w.value, y: p[2].y };
+  const r = container.value.getBoundingClientRect();
+  let clientX: number;
+  let clientY: number;
+
+  if ("touches" in e) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
+
+  let col = Math.floor((clientX - r.left) / cellW.value);
+  let row = Math.floor((clientY - r.top) / cellH.value);
+
+  col = Math.max(0, Math.min(props.cols - 1, col));
+  row = Math.max(0, Math.min(props.rows - 1, row));
+
+  // Constraints logic
+  if (dragging.value === 0) {
+    col = Math.min(col, points.value[1].col - 1);
+  } else if (dragging.value === 1) {
+    col = Math.max(
+      points.value[0].col + 1,
+      Math.min(col, points.value[2].col - 1)
+    );
+  } else if (dragging.value === 2) {
+    col = Math.max(col, points.value[1].col + 1);
+  }
+
+  points.value[dragging.value] = { col, row };
+}
+
+const svgPt = (p: GridPoint) => ({
+  x: p.col * cellW.value,
+  y: p.row * cellH.value,
+});
+
+// Fixed TS typing for segments
+const segments = computed(() => {
+  const p0 = svgPt(points.value[0]);
+  const p1 = svgPt(points.value[1]);
+  const p2 = svgPt(points.value[2]);
+  const last = { x: w.value, y: p2.y };
 
   return [
-    [p[0], p[1]],
-    [p[1], p[2]],
-    [p[2], last],
-  ] as const;
+    { x1: p0.x, y1: p0.y, x2: p1.x, y2: p1.y },
+    { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y },
+    { x1: p2.x, y1: p2.y, x2: last.x, y2: last.y },
+  ];
 });
 
-// ====== Playhead ======
-const playheadX = computed<number | null>(() => {
-  if (props.playheadBar == null) return null;
-
-  // Unwrap ref if needed
+const playheadX = computed(() => {
   const bar =
-    typeof props.playheadBar === "number"
-      ? props.playheadBar
-      : props.playheadBar.value;
-
-  if (isNaN(bar)) return null;
-
-  const col = bar / props.barsPerCell;
-  return col * cellW.value + cellW.value / 2;
+    typeof props.playheadBar === "object"
+      ? props.playheadBar.value
+      : props.playheadBar;
+  if (bar === null || bar === undefined) return 0;
+  return (bar / props.barsPerCell) * cellW.value;
 });
 
-// Highlighted column (TS-safe)
-const currentCol = computed<number | null>(() => {
-  if (props.playheadBar == null) return null;
-
+const currentCol = computed(() => {
   const bar =
-    typeof props.playheadBar === "number"
-      ? props.playheadBar
-      : props.playheadBar.value;
-  if (isNaN(bar)) return null;
-
+    typeof props.playheadBar === "object"
+      ? props.playheadBar.value
+      : props.playheadBar;
+  if (bar === null || bar === undefined) return null;
   return Math.min(props.cols - 1, Math.floor(bar / props.barsPerCell));
 });
 </script>
 
 <template>
-  <div ref="container" class="w-full">
+  <div ref="container" class="w-full bg-white relative">
     <svg
       :width="w"
       :height="h"
       @mousemove="move"
       @mouseup="up"
-      class="border select-none touch-none bg-white"
+      @mouseleave="up"
+      @touchmove.prevent="move"
+      @touchend="up"
+      class="select-none touch-none"
     >
-      <!-- Grid -->
-      <g stroke="#ddd">
+      <g stroke="#eee">
         <line
           v-for="c in cols + 1"
-          :key="`lineCol-${c}`"
+          :key="`col-${c}`"
           :x1="(c - 1) * cellW"
           y1="0"
           :x2="(c - 1) * cellW"
@@ -196,67 +184,63 @@ const currentCol = computed<number | null>(() => {
         />
         <line
           v-for="r in rows + 1"
+          :key="`row-${r}`"
           x1="0"
           :y1="(r - 1) * cellH"
-          :key="`lineRow-${r}`"
           :x2="w"
           :y2="(r - 1) * cellH"
         />
       </g>
 
-      <!-- Tempo labels -->
       <text
         v-for="r in rows"
-        :key="`textRow-${r}`"
+        :key="`label-${r}`"
         :x="2"
         :y="(r - 1) * cellH + 10"
-        class="text-[8px] fill-gray-500"
+        class="text-[8px] fill-gray-500 pointer-events-none"
       >
         {{ 40 + (rows - r) * 5 }}
       </text>
 
-      <!-- Lines connecting points -->
-      <g stroke="black" stroke-width="2">
-        <line
-          v-for="(s, i) in segments"
-          :key="`segment-${i}`"
-          :x1="s[0].x"
-          :y1="s[0].y"
-          :x2="s[1].x"
-          :y2="s[1].y"
-        />
-      </g>
-
-      <!-- Playhead rectangle -->
       <rect
         v-if="currentCol !== null"
         :x="currentCol * cellW"
         y="0"
         :width="cellW"
         :height="h"
-        class="fill-blue-300 opacity-40"
+        fill="rgba(200,200,255,0.4)"
       />
-
-      <!-- Playhead line (red) -->
       <line
-        v-if="playheadX"
-        :x1="playheadX - cellW / 2"
+        v-if="playheadBar !== null"
+        :x1="playheadX"
         y1="0"
-        :x2="playheadX - cellW / 2"
+        :x2="playheadX"
         :y2="h"
         stroke="red"
         stroke-width="2"
       />
 
-      <!-- Points -->
+      <g stroke="black" stroke-width="2">
+        <line
+          v-for="(s, i) in segments"
+          :key="`seg-${i}`"
+          :x1="s.x1"
+          :y1="s.y1"
+          :x2="s.x2"
+          :y2="s.y2"
+        />
+      </g>
+
       <circle
         v-for="(p, i) in points"
-        :key="`point-${i}`"
+        :key="`pt-${i}`"
         :cx="svgPt(p).x"
         :cy="svgPt(p).y"
-        r="8"
+        r="12"
         fill="blue"
-        @mousedown="down(i)"
+        class="cursor-pointer"
+        @mousedown="down(i, $event)"
+        @touchstart.prevent="down(i, $event)"
       />
     </svg>
   </div>

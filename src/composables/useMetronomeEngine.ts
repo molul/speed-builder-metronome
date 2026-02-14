@@ -3,7 +3,7 @@ import highUrl from "@assets/metronomeSounds/high.wav";
 import lowUrl from "@assets/metronomeSounds/low.wav";
 
 export interface TempoPoint {
-  bar: number; // Cell Index (0-15)
+  bar: number; // Cell index
   bpm: number;
 }
 
@@ -13,7 +13,7 @@ export function useMetronomeEngine() {
   const visualBar = ref(0);
   const currentBpm = ref(0);
 
-  const TOTAL_CELLS = 16; // Fixed grid size
+  const TOTAL_CELLS = 16;
 
   let ctx: AudioContext | null = null;
   let hiBuf: AudioBuffer | null = null;
@@ -33,9 +33,6 @@ export function useMetronomeEngine() {
     loBuf = await loadSample(lowUrl);
   }
 
-  /**
-   * Calculates BPM based on cell indices transformed to real bars.
-   */
   function bpmAtBar(
     bar: number,
     pts: [TempoPoint, TempoPoint, TempoPoint],
@@ -49,25 +46,19 @@ export function useMetronomeEngine() {
       const t = (bar - a.bar) / (b.bar - a.bar || 1);
       return a.bpm + t * (b.bpm - a.bpm);
     }
-
     if (bar <= c.bar) {
       const t = (bar - b.bar) / (c.bar - b.bar || 1);
       return b.bpm + t * (c.bpm - b.bpm);
     }
-
     return c.bpm;
   }
 
-  /**
-   * Generates an array of BPMs for all bars in the 16-cell grid.
-   */
   function buildTempoMap(
     pts: [TempoPoint, TempoPoint, TempoPoint],
     barsPerCell: number = 1
   ): number[] {
     const totalBars = TOTAL_CELLS * barsPerCell;
     const out: number[] = [];
-
     for (let i = 0; i < totalBars; i++) {
       const cellStart = Math.floor(i / barsPerCell) * barsPerCell;
       out.push(bpmAtBar(cellStart, pts, barsPerCell));
@@ -90,21 +81,21 @@ export function useMetronomeEngine() {
 
     const LOOK_AHEAD_MS = 25;
     const SCHEDULE_AHEAD_TIME = 0.1;
-
     const totalBarsInGrid = TOTAL_CELLS * barsPerCell;
-    const lastBarIndex = totalBarsInGrid - 1;
 
     let nextBeatTime = ctx.currentTime;
     let beatInBar = 0;
 
     const scheduler = setInterval(() => {
-      if (!ctx || !isRunning.value) {
+      if (!isRunning.value) {
         clearInterval(scheduler);
         return;
       }
 
+      if (!ctx) return;
+
       while (nextBeatTime < ctx.currentTime + SCHEDULE_AHEAD_TIME) {
-        if (stopAtEnd && currentBar.value > lastBarIndex) {
+        if (stopAtEnd && currentBar.value >= totalBarsInGrid) {
           stop();
           break;
         }
@@ -114,21 +105,20 @@ export function useMetronomeEngine() {
         const activeBpm = bpmAtBar(cellStart, points, barsPerCell);
         const secondsPerBeat = 60 / activeBpm / 2;
 
-        const source = ctx.createBufferSource();
+        const source = ctx!.createBufferSource();
         source.buffer = beatInBar === 0 ? hiBuf! : loBuf!;
-        source.connect(ctx.destination);
+        source.connect(ctx!.destination);
         source.start(nextBeatTime);
 
         if (beatInBar === 0) {
           visualBar.value = currentBar.value;
           if (currentBar.value === cellStart) {
-            currentBpm.value = activeBpm;
+            currentBpm.value = Math.round(activeBpm);
           }
         }
 
         nextBeatTime += secondsPerBeat;
         beatInBar++;
-
         if (beatInBar > 3) {
           beatInBar = 0;
           currentBar.value++;
