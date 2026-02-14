@@ -49,8 +49,15 @@ onUnmounted(() => {
 const cellW = computed(() => w.value / props.cols);
 const cellH = computed(() => h.value / props.rows);
 
-const bpmToRow = (bpm: number) => props.rows - Math.round((bpm - 40) / 5);
-const rowToBpm = (row: number) => 40 + (props.rows - row) * 5;
+// Modified for precision and symmetry
+const bpmToRow = (bpm: number) => {
+  const row = props.rows - (bpm - 40) / 5;
+  return Math.round(row);
+};
+
+const rowToBpm = (row: number) => {
+  return 40 + (props.rows - row) * 5;
+};
 
 const points = ref<GridPoint[]>([
   { col: 0, row: bpmToRow(props.startBpm) },
@@ -58,7 +65,6 @@ const points = ref<GridPoint[]>([
   { col: 12, row: bpmToRow(props.endBpm) },
 ]);
 
-// Sync dots if props change from parent
 watch(
   () => [props.startBpm, props.maxBpm, props.endBpm] as const,
   ([s, m, e]) => {
@@ -72,9 +78,7 @@ watch(
 );
 const dragging = ref<number | null>(null);
 
-// Mobile + Desktop start dragging
 const down = (i: number, e: MouseEvent | TouchEvent) => {
-  // Prevent scrolling while dragging on mobile
   if (e.cancelable) e.preventDefault();
   dragging.value = i;
 };
@@ -98,30 +102,37 @@ function move(e: MouseEvent | TouchEvent) {
   const [p0, p1, p2] = points.value;
   if (!p0 || !p1 || !p2) return;
 
-  const r = container.value.getBoundingClientRect();
+  const svgEl = container.value.querySelector("svg");
+  if (!svgEl) return;
 
-  // 1. Declare variables HERE so they are visible to the whole function
+  const rect = svgEl.getBoundingClientRect();
+
   let clientX = 0;
   let clientY = 0;
 
   if ("touches" in e) {
     const touch = e.touches[0];
     if (!touch) return;
-    // 2. Assign values (no 'let' here)
     clientX = touch.clientX;
     clientY = touch.clientY;
   } else {
-    // 3. Assign values (no 'let' here)
     clientX = (e as MouseEvent).clientX;
     clientY = (e as MouseEvent).clientY;
   }
 
-  // Now clientX and clientY are defined and accessible here!
-  let col = Math.floor((clientX - r.left) / cellW.value);
-  let row = Math.floor((clientY - r.top) / cellH.value);
+  const relativeX = clientX - rect.left;
+  const relativeY = clientY - rect.top;
 
+  // Normalized coordinate calculation
+  const internalX = (relativeX / rect.width) * w.value;
+  const internalY = (relativeY / rect.height) * h.value;
+
+  let col = Math.floor(internalX / cellW.value);
+  let row = Math.round(internalY / cellH.value); // Use round to snap to lines better
+
+  // Modified clamping to allow reaching the bottom (props.rows)
   col = Math.max(0, Math.min(props.cols - 1, col));
-  row = Math.max(0, Math.min(props.rows - 1, row));
+  row = Math.max(0, Math.min(props.rows, row));
 
   if (dragging.value === 0) {
     col = Math.min(col, p1.col - 1);
@@ -139,7 +150,6 @@ const svgPt = (p: GridPoint) => ({
   y: p.row * cellH.value,
 });
 
-// Fixed TS typing for segments
 const segments = computed(() => {
   const [p0, p1, p2] = points.value;
   if (!p0 || !p1 || !p2) return [];
@@ -148,15 +158,14 @@ const segments = computed(() => {
   const pt1 = svgPt(p1);
   const pt2 = svgPt(p2);
 
-  // Define the start and end horizontal anchors
   const first = { x: 0, y: pt0.y };
   const last = { x: w.value, y: pt2.y };
 
   return [
-    { x1: first.x, y1: first.y, x2: pt0.x, y2: pt0.y }, // New line: Left edge to Dot 1
-    { x1: pt0.x, y1: pt0.y, x2: pt1.x, y2: pt1.y }, // Dot 1 to Dot 2
-    { x1: pt1.x, y1: pt1.y, x2: pt2.x, y2: pt2.y }, // Dot 2 to Dot 3
-    { x1: pt2.x, y1: pt2.y, x2: last.x, y2: last.y }, // Dot 3 to Right edge
+    { x1: first.x, y1: first.y, x2: pt0.x, y2: pt0.y },
+    { x1: pt0.x, y1: pt0.y, x2: pt1.x, y2: pt1.y },
+    { x1: pt1.x, y1: pt1.y, x2: pt2.x, y2: pt2.y },
+    { x1: pt2.x, y1: pt2.y, x2: last.x, y2: last.y },
   ];
 });
 
@@ -206,8 +215,8 @@ const currentCol = computed(() => {
         @touchmove.prevent="move"
         @touchend="up"
         class="select-none touch-none w-full"
+        style="overflow: visible"
       >
-        <!-- Grid lines -->
         <g class="stroke-gray-500">
           <line
             v-for="c in cols + 1"
@@ -227,7 +236,6 @@ const currentCol = computed(() => {
           />
         </g>
 
-        <!-- Light blue cell -->
         <rect
           v-if="currentCol !== null"
           :x="currentCol * cellW"
@@ -236,7 +244,7 @@ const currentCol = computed(() => {
           :height="h"
           fill="rgba(255,255,255,0.2)"
         />
-        <!-- Bars red line -->
+
         <line
           v-if="playheadBar !== null"
           :x1="playheadX"
@@ -246,8 +254,8 @@ const currentCol = computed(() => {
           stroke="red"
           stroke-width="2"
         />
-        <!-- Black lines between blue points -->
-        <g stroke-width="2" class="stroke-white">
+
+        <g stroke-width="2" class="stroke-white z-50">
           <line
             v-for="(s, i) in segments"
             :key="`seg-${i}`"
@@ -257,7 +265,7 @@ const currentCol = computed(() => {
             :y2="s.y2"
           />
         </g>
-        <!-- Blue points -->
+
         <circle
           v-for="(p, i) in points"
           :key="`pt-${i}`"
