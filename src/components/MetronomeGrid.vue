@@ -74,7 +74,7 @@ watch(
 // ====== SVG coordinates ======
 function svgPt(p: GridPoint) {
   return {
-    x: (p.col + 1) * cellW.value,
+    x: (p.col - 1) * cellW.value,
     y: (p.row - 1) * cellH.value,
   };
 }
@@ -240,9 +240,9 @@ const currentCol = computed<number | null>(() => {
       <!-- Playhead line (red) -->
       <line
         v-if="playheadX"
-        :x1="playheadX"
+        :x1="playheadX - cellW / 2"
         y1="0"
-        :x2="playheadX"
+        :x2="playheadX - cellW / 2"
         :y2="h"
         stroke="red"
         stroke-width="2"

@@ -52,7 +52,7 @@ function start() {
       <button class="border px-3 py-1" @click="start">start</button>
       <button class="border px-3 py-1" @click="engine.stop()">stop</button>
     </div>
-    {{ engine.currentBar }}
+
     <MetronomeGrid
       :cols="cols"
       :rows="rows"
@@ -61,7 +61,7 @@ function start() {
       :end-bpm="cfg.endBpm"
       :bars-per-cell="cfg.barsPerCell"
       :tempo-map="tempoMap"
-      :playhead-bar="engine.currentBar"
+      :playhead-bar="engine.visualBar"
       @update:points="(points:[TempoPoint, TempoPoint, TempoPoint]) => updatePoints(points)"
     />
   </div>
