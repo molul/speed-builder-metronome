@@ -138,22 +138,22 @@ const svgPt = (p: GridPoint) => ({
 
 // Fixed TS typing for segments
 const segments = computed(() => {
-  // 1. Destructure the points
   const [p0, p1, p2] = points.value;
-
-  // 2. Guard: If any point is missing, return an empty array
   if (!p0 || !p1 || !p2) return [];
 
-  // 3. Now TS knows p0, p1, and p2 are valid GridPoints
   const pt0 = svgPt(p0);
   const pt1 = svgPt(p1);
   const pt2 = svgPt(p2);
+
+  // Define the start and end horizontal anchors
+  const first = { x: 0, y: pt0.y };
   const last = { x: w.value, y: pt2.y };
 
   return [
-    { x1: pt0.x, y1: pt0.y, x2: pt1.x, y2: pt1.y },
-    { x1: pt1.x, y1: pt1.y, x2: pt2.x, y2: pt2.y },
-    { x1: pt2.x, y1: pt2.y, x2: last.x, y2: last.y },
+    { x1: first.x, y1: first.y, x2: pt0.x, y2: pt0.y }, // New line: Left edge to Dot 1
+    { x1: pt0.x, y1: pt0.y, x2: pt1.x, y2: pt1.y }, // Dot 1 to Dot 2
+    { x1: pt1.x, y1: pt1.y, x2: pt2.x, y2: pt2.y }, // Dot 2 to Dot 3
+    { x1: pt2.x, y1: pt2.y, x2: last.x, y2: last.y }, // Dot 3 to Right edge
   ];
 });
 
