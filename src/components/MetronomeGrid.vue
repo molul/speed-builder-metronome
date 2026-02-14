@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, type Ref, type UnwrapRef } from "vue";
+import { computed, ref, watch, type Ref } from "vue";
 import type { TempoPoint } from "../composables/useMetronomeEngine";
 
 // Point in the grid
