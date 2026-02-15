@@ -76,6 +76,10 @@ export function useMetronomeEngine() {
     return out;
   }
 
+
+
+
+/*
   async function start(
     points: [TempoPoint, TempoPoint, TempoPoint],
     stopAtEnd: boolean,
@@ -133,6 +137,75 @@ export function useMetronomeEngine() {
         nextBeatTime += secondsPerBeat / 4; // Assuming 4 beats per bar
         beatInBar++;
         if (beatInBar > 3) {
+          beatInBar = 0;
+          currentBar.value++;
+        }
+      }
+    }, LOOK_AHEAD_MS);
+  }
+*/
+
+  async function start(
+    points: [TempoPoint, TempoPoint, TempoPoint],
+    stopAtEnd: boolean,
+    barsPerCell: number = 1,
+    tempoStep: TempoStep = "cell"
+  ) {
+    if (!ctx) await load();
+    if (!ctx || !hiBuf || !loBuf) return;
+    if (ctx.state === "suspended") await ctx.resume();
+
+    isRunning.value = true;
+    currentBar.value = 0;
+    visualBar.value = 0;
+
+    const LOOK_AHEAD_MS = 25;
+    const SCHEDULE_AHEAD_TIME = 0.1;
+    const totalBarsInGrid = TOTAL_CELLS * barsPerCell;
+
+    let nextBeatTime = ctx.currentTime;
+    let beatInBar = 0;
+
+    const scheduler = setInterval(() => {
+      if (!isRunning.value) {
+        clearInterval(scheduler);
+        return;
+      }
+
+      if (!ctx) return;
+
+      while (nextBeatTime < ctx.currentTime + SCHEDULE_AHEAD_TIME) {
+        if (stopAtEnd && currentBar.value >= totalBarsInGrid) {
+          stop();
+          break;
+        }
+
+        const calculationBar =
+          tempoStep === "cell"
+            ? Math.floor(currentBar.value / barsPerCell) * barsPerCell
+            : currentBar.value;
+
+        const activeBpm = bpmAtBar(calculationBar, points, barsPerCell);
+        
+        // Corrected: 60 / BPM is exactly one quarter note beat
+        const secondsPerBeat = 60 / activeBpm;
+
+        const source = ctx!.createBufferSource();
+        source.buffer = beatInBar === 0 ? hiBuf! : loBuf!;
+        source.connect(ctx!.destination);
+        source.start(nextBeatTime);
+
+        if (beatInBar === 0) {
+          visualBar.value = currentBar.value;
+          currentBpm.value = Math.round(activeBpm);
+        }
+
+        // Increment by the full beat duration
+        nextBeatTime += secondsPerBeat; 
+        
+        beatInBar++;
+        // Reset after 4 beats to complete one full bar in 4/4 time
+        if (beatInBar >= 4) {
           beatInBar = 0;
           currentBar.value++;
         }
