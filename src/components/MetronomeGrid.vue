@@ -224,7 +224,7 @@ watch(
       <div
         v-for="r in rows"
         :key="`label-${r}`"
-        class="text-[10px] leading-0 text-white flex items-end font-bold justify-end pr-2 border-b border-white"
+        class="text-[10px] leading-0 text-white flex items-end font-bold justify-end pr-2 border-b border-white -mb-0.5"
         :style="{
           width: tempoColumnWidth + 'px',
           height: cellH + 'px',
