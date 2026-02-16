@@ -27,8 +27,9 @@ const h = ref(500)
 function resize() {
   if (!container.value) return
   const cw = container.value.clientWidth
-  w.value = cw - tempoColumnWidth - padding * 2
-h.value = 592
+  //w.value = cw - tempoColumnWidth - padding * 2
+w..value = 320
+h.value = 555
   //h.value = Math.min(window.innerHeight * 0.7, cw * 1.5)
 }
 
