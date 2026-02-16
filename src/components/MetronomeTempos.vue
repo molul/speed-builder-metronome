@@ -24,11 +24,11 @@ const store = useMetronomeStore()
         <div
           v-if="store.rowToBpm(r) === store.config.maxBpm"
           class="border-t-0 bg-red-500 size-full"
-        />
+                >&nbsp;</div>
         <div
           v-if="store.rowToBpm(r) === store.config.endBpm"
           class="border-t-0 bg-yellow-500 size-full"
-        />
+                >&nbsp;</div>
       </div>
       <span :class="[[store.config.startBpm, store.config.maxBpm, store.config.endBpm].includes(store.rowToBpm(r)) ? 'text-gray-900' : '', 'z-30']">{{ store.rowToBpm(r) }}</span>
     </div>
