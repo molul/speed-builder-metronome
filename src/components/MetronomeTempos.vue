@@ -20,7 +20,7 @@ const store = useMetronomeStore()
         <div
           v-if="store.rowToBpm(r) === store.config.startBpm"
           class="border-t-0 bg-green-500 size-full"
-        />
+        >&nbsp;</div>
         <div
           v-if="store.rowToBpm(r) === store.config.maxBpm"
           class="border-t-0 bg-red-500 size-full"
