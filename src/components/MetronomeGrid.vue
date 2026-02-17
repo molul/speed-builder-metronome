@@ -54,7 +54,7 @@ const segments = computed(() => {
 </script>
 
 <template>
-  <div class="size-full bg-gray-700">
+  <div class="size-full bg-zinc-700">
     <svg
       :width="width"
       :height="height"
@@ -75,7 +75,7 @@ const segments = computed(() => {
         class="stroke-green-500"
       />
 
-      <g class="stroke-gray-500">
+      <g class="stroke-zinc-500">
         <line
           v-for="c in cols + 1"
           :key="`c-${c}`"

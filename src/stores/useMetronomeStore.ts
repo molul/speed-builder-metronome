@@ -41,20 +41,6 @@ export const useMetronomeStore = defineStore('metronome', () => {
   const rowToBpm = (row: number) => 40 + (rows - row) * 5
 
   // 4. Actions
-  function bump(key: keyof MetronomeConfig, delta: number) {
-    if (typeof config[key] !== 'number') return
-
-    const current = config[key] as number
-    const next = Math.min(225, Math.max(40, current + delta))
-
-    if (key === 'startBpm') {
-      config.startBpm = Math.min(next, config.maxBpm, config.endBpm)
-    } else if (key === 'maxBpm') {
-      config.maxBpm = Math.max(next, config.startBpm, config.endBpm)
-    } else if (key === 'endBpm') {
-      config.endBpm = Math.max(config.startBpm, Math.min(next, config.maxBpm))
-    }
-  }
 
   function updatePoints(p: [TempoPoint, TempoPoint, TempoPoint]) {
     config.points = p
@@ -105,7 +91,6 @@ export const useMetronomeStore = defineStore('metronome', () => {
     rows,
     metronomeSectionPadding,
     gridPoints, // Add this
-    bump,
     updatePoints,
     loadPreset,
     bpmToRow,

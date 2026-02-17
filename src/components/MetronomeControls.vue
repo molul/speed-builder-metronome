@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import { useMetronomeStore } from '../stores/useMetronomeStore'
-import type { MetronomePreset, TempoStep } from '../assets/types'
-import TempoVariables from './TempoVariables.vue'
-import Button from './Button.vue'
-import Label from './Label.vue'
+import type { MetronomePreset } from '../assets/types'
+import SliderControl from './SliderControl.vue'
+import MyButton from './MyButton.vue'
+import SelectButtonControl from './SelectButtonControl.vue'
+import CheckBoxControl from './CheckboxControl.vue'
+import type { SelectChangeEvent } from 'primevue/select'
 
 const store = useMetronomeStore()
 const presets = reactive<MetronomePreset[]>(
@@ -37,13 +39,8 @@ function savePreset() {
   window.localStorage.setItem('metronomePresets', JSON.stringify(presets))
 }
 
-function handlePresetChange(event: Event) {
-  const target = event.target as HTMLSelectElement
-  const index = target.selectedIndex - 1
-  const selectedPreset = presets[index]
-  if (selectedPreset) {
-    store.loadPreset(selectedPreset)
-  }
+function handlePresetChange(event: SelectChangeEvent) {
+  store.loadPreset(event.value)
 }
 
 watch(
@@ -51,72 +48,59 @@ watch(
   () => window.localStorage.setItem('metronomePresets', JSON.stringify(presets)),
   { deep: true }
 )
+
+const labels = {
+  startBpm: 'Start BPM',
+  maxBpm: 'Max BPM',
+  endBpm: 'Final BPM'
+} as const
+type BpmKey = keyof typeof labels
 </script>
 
 <template>
-  <div
-    class="flex w-full flex-col rounded-lg p-4 gap-4 text-sm bg-gray-700 transition-all"
-  >
-    <TempoVariables />
-
-    <hr class="border-gray-500" />
-
-    <div class="flex flex-col gap-4">
-      <div class="flex justify-between items-center w-full">
-        <Label label="Bars per cell" />
-        <div class="flex gap-2 items-center">
-          <Button
-            label="-"
-            @click="store.config.barsPerCell = Math.max(1, store.config.barsPerCell - 1)"
-            class="w-14"
-          />
-          <div class="w-12 text-center text-white font-bold">
-            {{ store.config.barsPerCell }}
-          </div>
-          <Button
-            label="+"
-            @click="store.config.barsPerCell = Math.min(8, store.config.barsPerCell + 1)"
-            class="w-14"
-          />
-        </div>
-      </div>
-
-      <div class="flex justify-between items-center w-full">
-        <Label label="Increase tempo" />
-        <div class="flex bg-gray-800 p-1 rounded-md">
-          <button
-            v-for="step in (['bar', 'cell'] as TempoStep[])"
-            :key="step"
-            @click="store.config.tempoStep = step"
-            :class="[
-              'px-3 py-1 rounded font-semibold transition-colors cursor-pointer capitalize',
-              store.config.tempoStep === step
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-400 hover:text-white'
-            ]"
-          >
-            Every {{ step }}
-          </button>
-        </div>
-      </div>
-
-      <label class="flex gap-2 items-center py-2 cursor-pointer">
-        <input type="checkbox" v-model="store.config.stopAtEnd" class="w-4 h-4" />
-        <Label label="Stop at end" />
-      </label>
+  <div class="flex w-full flex-col rounded-lg gap-4 text-sm transition-all">
+    <div class="flex flex-col gap-3">
+      <SliderControl
+        v-for="key in (Object.keys(labels) as BpmKey[])"
+        :key="key"
+        :label="labels[key]"
+        v-model="store.config[key]"
+        :min="40"
+        :max="225"
+        :step="5"
+      />
     </div>
 
-    <hr class="border-gray-500" />
+    <hr class="border-zinc-500" />
+
+    <div class="flex flex-col gap-4">
+      <SliderControl
+        label="Bars per cell"
+        v-model="store.config.barsPerCell"
+        :min="1"
+        :max="8"
+      />
+
+      <SelectButtonControl
+        v-model="store.config.tempoStep"
+        label="Increase tempo"
+        :options="['bar', 'cell']"
+      />
+
+      <CheckBoxControl label="Stop at end" v-model="store.config.stopAtEnd" />
+    </div>
+
+    <hr class="border-zinc-500" />
 
     <div class="flex flex-col gap-4 w-full">
       <div class="flex gap-4">
-        <Button
+        <MyButton
           icon="solar:diskette-linear"
           label="Save default"
           @click="saveConfig"
           class="flex-1"
         />
-        <Button
+        <MyButton
           icon="solar:restart-linear"
           label="Load default"
           @click="handleLoadDefault"
@@ -124,24 +108,20 @@ watch(
         />
       </div>
 
-      <Button
-        icon="solar:diskette-linear"
-        label="Save new preset"
-        :full-width="true"
-        @click="savePreset"
-      />
-
-      <div class="flex gap-2 items-center justify-between">
-        <Label label="Load preset" />
-        <select
-          class="font-bold rounded-md py-2 px-2 bg-gray-600 border border-gray-500 text-gray-100 min-w-[200px]"
+      <div class="flex gap-4">
+        <MyButton
+          icon="solar:diskette-linear"
+          :full-width="true"
+          label="Save new"
+          @click="savePreset"
+        />
+        <Select
+          :options="presets"
+          option-label="name"
+          fluid
+          placeholder="Load preset"
           @change="handlePresetChange"
-        >
-          <option disabled selected>-</option>
-          <option v-for="p in presets" :key="`preset-${p.name}`">
-            {{ p.name }}
-          </option>
-        </select>
+        />
       </div>
     </div>
   </div>

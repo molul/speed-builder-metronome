@@ -2,7 +2,7 @@
 import MetronomeSection from './MetronomeSection.vue'
 import { useMetronomeEngine } from '../composables/useMetronomeEngine'
 import { useMetronomeStore } from '../stores/useMetronomeStore'
-import Button from './Button.vue'
+import MyButton from './MyButton.vue'
 import Header from './Header.vue'
 
 const store = useMetronomeStore()
@@ -32,7 +32,7 @@ watch(engine.isRunning, val => {
 
 <template>
   <div
-    class="size-full lg:h-auto mx-auto lg:rounded-lg flex flex-col gap-0 bg-gray-800 relative p-0 lg:border border-gray-700 shadow-md"
+    class="size-full lg:h-auto mx-auto lg:rounded-lg flex flex-col gap-0 bg-zinc-800 relative p-0 lg:border border-zinc-700 shadow-md"
   >
     <Header />
 
@@ -40,17 +40,17 @@ watch(engine.isRunning, val => {
       <MetronomeSection :cols="16" :rows="37" :playhead-bar="engine.visualBar" />
 
       <div class="flex gap-2 justify-center items-center px-3">
-        <Button
+        <MyButton
           v-if="!store.isRunning"
           icon="solar:play-bold"
           size="big"
           shape="rounded"
           @click="start"
         />
-        <Button
+        <MyButton
           v-if="store.isRunning"
           icon="solar:stop-bold"
-          type="alert"
+          severity="danger"
           shape="rounded"
           size="big"
           @click="stop"

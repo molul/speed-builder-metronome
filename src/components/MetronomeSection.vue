@@ -18,18 +18,18 @@ interface Props {
 const props = defineProps<Props>()
 const store = useMetronomeStore()
 
-//const tempoColumnWidth = 26
-//const padding = 16
+const tempoColumnWidth = 30
+const padding = 16
 const container = ref<HTMLDivElement | null>(null)
 const w = ref(300)
 const h = ref(500)
 
 function resize() {
   if (!container.value) return
-  //const cw = container.value.clientWidth
-  //w.value = cw - tempoColumnWidth - padding * 2
-w.value = 320
-h.value = 555
+  const cw = container.value.clientWidth
+  w.value = cw - tempoColumnWidth - padding * 2
+  // w.value = 320
+  h.value = 518
   //h.value = Math.min(window.innerHeight * 0.7, cw * 1.5)
 }
 
@@ -113,20 +113,8 @@ function move(e: MouseEvent | TouchEvent) {
   let col = Math.max(0, Math.min(props.cols - 1, Math.floor(internalX / cellW.value)))
   let row = Math.max(0, Math.min(props.rows, Math.round(internalY / cellH.value)))
 
-  if (dragging.value === 0) {
-    col = Math.min(col, p1.col - 1)
-    row = Math.max(p1.row, p2.row, row)
-  } else if (dragging.value === 1) {
-    col = Math.max(p0.col + 1, Math.min(col, p2.col - 1))
-    row = Math.min(row, p0.row, p2.row)
-  } else if (dragging.value === 2) {
-    col = Math.max(col, p1.col + 1)
-    row = Math.max(p1.row, Math.min(p0.row, row))
-  }
-
   points.value[dragging.value] = { col, row }
 
-// here
   store.updatePoints(
     points.value.map(p => ({
       bar: p.col,
@@ -184,32 +172,8 @@ const currentCol = computed(() => {
 <template>
   <div ref="container" class="w-full flex px-4">
     <MetronomeTempos :height="h" />
-    <!-- <div class="flex flex-col select-none z-10">
-      <div
-        v-for="r in rows"
-        :key="r"
-        class="text-[11px] text-white flex items-end justify-end pr-0.5 border-b border-white relative leading-none font-semibold"
-        :style="{ width: tempoColumnWidth + 'px', height: cellH + 'px' }"
-      >
-        <div class="absolute top-0 left-0 w-full flex">
-          <div
-            v-if="rowToBpm(r - 1) === store.config.startBpm"
-            class="border-t-4 border-green-500 w-full"
-          />
-          <div
-            v-if="rowToBpm(r - 1) === store.config.maxBpm"
-            class="border-t-4 border-red-500 w-full"
-          />
-          <div
-            v-if="rowToBpm(r - 1) === store.config.endBpm"
-            class="border-t-4 border-yellow-500 w-full"
-          />
-        </div>
-        <span>{{ rowToBpm(r - 1) }}</span>
-      </div>
-    </div> -->
 
-    <div class="w-full bg-gray-700">
+    <div class="w-full bg-zinc-700">
       <svg
         :width="w"
         :height="h"
@@ -220,7 +184,7 @@ const currentCol = computed(() => {
         @touchend="up"
         class="w-full overflow-visible select-none touch-none"
       >
-        <g class="stroke-gray-500">
+        <g class="stroke-zinc-500">
           <line
             v-for="c in cols + 1"
             :key="c"
@@ -288,7 +252,7 @@ const currentCol = computed(() => {
           r="12"
           :class="[
             'cursor-pointer',
-            i === 0 ? 'fill-green-500' : i === 1 ? 'fill-red-500' : 'fill-yellow-500'
+            i === 0 ? 'fill-green-400' : i === 1 ? 'fill-red-400' : 'fill-yellow-400'
           ]"
           @mousedown="down(i, $event)"
           @touchstart.prevent="down(i, $event)"

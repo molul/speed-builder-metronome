@@ -14,14 +14,35 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   fullWidth: false,
   size: 'normal',
-  type: 'primary',
+  severity: 'primary',
   shape: 'square',
   disabled: false
 })
 </script>
 
 <template>
-  <button
+  <Button
+    :label="props.label"
+    :fluid="props.fullWidth"
+    :class="[
+      '!text-sm',
+      shape === 'rounded' ? '!rounded-full !aspect-square' : '!rounded-md',
+      { '!size-16 text-3xl': props.size === 'big' }
+    ]"
+    :pt="{
+      root: '!px-4 !py-2 bg-blue-600 justify-center items-center hover:bg-blue-500 active:bg-blue-600 flex gap-2.5 !text-xs',
+      label: '!text-lg !font-semibold !text-sm'
+    }"
+  >
+    <template #icon>
+      <Icon
+        v-if="props.icon"
+        :icon="props.icon"
+        :class="[props.size === 'big' ? 'size-7' : 'size-4']"
+      />
+    </template>
+  </Button>
+  <!-- <button
     :class="[
       'font-semibold text-white  duration-200 transition-colors flex gap-2.5 justify-center items-center cursor-pointer',
       {
@@ -46,5 +67,5 @@ const props = withDefaults(defineProps<Props>(), {
       :class="[props.size === 'big' ? 'size-7' : 'size-6']"
     />
     <span v-if="props.label">{{ props.label }}</span>
-  </button>
+  </button> -->
 </template>
