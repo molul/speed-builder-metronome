@@ -13,19 +13,19 @@ const presets = reactive<MetronomePreset[]>(
   JSON.parse(window.localStorage.getItem('metronomePresets') || '[]')
 )
 
-function saveConfig() {
-  window.localStorage.setItem('metronomeConfig', JSON.stringify(store.config))
-  alert('Configuración guardada.')
-}
+// function saveConfig() {
+//   window.localStorage.setItem('metronomeConfig', JSON.stringify(store.config))
+//   alert('Configuración guardada.')
+// }
 
-function handleLoadDefault() {
-  const saved = window.localStorage.getItem('metronomeConfig')
-  if (!saved) {
-    alert('No hay configuración predeterminada guardada.')
-    return
-  }
-  store.loadPreset(JSON.parse(saved))
-}
+// function handleLoadDefault() {
+//   const saved = window.localStorage.getItem('metronomeConfig')
+//   if (!saved) {
+//     alert('No hay configuración predeterminada guardada.')
+//     return
+//   }
+//   store.loadPreset(JSON.parse(saved))
+// }
 
 function savePreset() {
   const name = prompt('Nombre del preset:')
@@ -71,8 +71,6 @@ type BpmKey = keyof typeof labels
       />
     </div>
 
-    <hr class="border-zinc-600" />
-
     <div class="flex flex-col gap-4">
       <SliderControl
         label="Bars per cell"
@@ -93,7 +91,7 @@ type BpmKey = keyof typeof labels
     <hr class="border-zinc-600" />
 
     <div class="flex flex-col gap-4 w-full">
-      <div class="flex gap-4">
+      <!-- <div class="flex gap-4">
         <MyButton
           icon="solar:diskette-linear"
           label="Save default"
@@ -106,9 +104,9 @@ type BpmKey = keyof typeof labels
           @click="handleLoadDefault"
           class="flex-1"
         />
-      </div>
+      </div> -->
 
-      <div class="flex gap-4">
+      <div class="flex flex-col gap-4">
         <MyButton
           icon="solar:diskette-linear"
           :full-width="true"
