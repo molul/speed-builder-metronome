@@ -8,6 +8,12 @@
   "theme_color": "#18181b",
   "icons": [
     {
+      "src": "icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "metronome-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
@@ -24,12 +30,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "icon-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ],
   "screenshots": [
