@@ -71,7 +71,7 @@ type BpmKey = keyof typeof labels
       />
     </div>
 
-    <hr class="border-zinc-500" />
+    <hr class="border-zinc-600" />
 
     <div class="flex flex-col gap-4">
       <SliderControl
@@ -90,7 +90,7 @@ type BpmKey = keyof typeof labels
       <CheckBoxControl label="Stop at end" v-model="store.config.stopAtEnd" />
     </div>
 
-    <hr class="border-zinc-500" />
+    <hr class="border-zinc-600" />
 
     <div class="flex flex-col gap-4 w-full">
       <div class="flex gap-4">
