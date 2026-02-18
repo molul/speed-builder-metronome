@@ -10,7 +10,7 @@ const store = useMetronomeStore()
     <div
       v-for="r in store.rows +1"
       :key="r"
-      class="text-[11px] text-white flex items-end justify-end pr-0.5 border-b border-zinc-500 relative leading-none font-semibold"
+      class="text-[11px] text-white flex items-end justify-end pr-0.5 border-b-0 border-zinc-500 relative leading-none font-semibold"
       :style="{
         width: '30px',
         //width: store.temposColumnWidth + 'px',
