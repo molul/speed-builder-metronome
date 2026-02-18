@@ -62,7 +62,7 @@ async function handleInstall() {
     >
       <div class="flex items-center gap-3">
         <div class="p-2 bg-blue-500/10 rounded-lg">
-          <Icon icon="solar:download-square-bold" class="text-blue-400 size-5" />
+          <Icon icon="solar:download-square-bold" class="text-blue-400 size-6" />
         </div>
         <span class="text-sm font-semibold text-zinc-200">Install for offline use</span>
       </div>
