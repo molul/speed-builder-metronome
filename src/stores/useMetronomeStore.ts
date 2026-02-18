@@ -19,7 +19,7 @@ export const useMetronomeStore = defineStore('metronome', () => {
   const defaultConfig = {
     startBpm: 100,
     peakBpm: 160,
-    endBpm: 115,
+    endBpm: 130,
     stopAtEnd: true,
     barsPerCell: 1,
     tempoStep: 'cell' as TempoStep,
