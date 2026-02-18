@@ -19,19 +19,19 @@ const store = useMetronomeStore()
     >
       <div class="absolute top-0 left-0 size-full flex">
         <div
-          v-if="store.rowToBpm(r) === store.config.startBpm"
+          v-if="store.rowToBpm(r+1) === store.config.startBpm"
           class="border-t-0 bg-green-400 size-full"
         >
           &nbsp;
         </div>
         <div
-          v-if="store.rowToBpm(r) === store.config.maxBpm"
+          v-if="store.rowToBpm(r+1) === store.config.maxBpm"
           class="border-t-0 bg-red-400 size-full"
         >
           &nbsp;
         </div>
         <div
-          v-if="store.rowToBpm(r) === store.config.endBpm"
+          v-if="store.rowToBpm(r+1) === store.config.endBpm"
           class="border-t-0 bg-yellow-400 size-full"
         >
           &nbsp;
