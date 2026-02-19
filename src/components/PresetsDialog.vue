@@ -54,7 +54,7 @@ const handleDelete = (index: number) => {
   <div class="flex flex-col gap-4 max-h-[60vh]">
     <div
       v-if="presets.length === 0"
-      class="text-center py-8 text-zinc-600 dark:text-zinc-500 italic"
+      class="text-sm text-center py-8 text-zinc-600 dark:text-zinc-500 italic"
     >
       No saved presets found.
     </div>
