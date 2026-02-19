@@ -26,7 +26,7 @@ const getRowBgClass = (rowIndex: number) => {
     >
       <div class="absolute top-0 left-0 size-full z-0" :class="getRowBgClass(r - 1)" />
 
-      <span :class="['z-30 rounded-l', { 'text-zinc-900': getRowBgClass(r - 1) !== '' }]">
+      <span :class="['z-30 rounded-l-sm', { 'text-zinc-900': getRowBgClass(r - 1) !== '' }]">
         {{ store.rowToBpm(r) + 5 }}
       </span>
     </div>
