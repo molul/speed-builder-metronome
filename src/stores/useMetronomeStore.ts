@@ -22,7 +22,7 @@ export const useMetronomeStore = defineStore('metronome', () => {
     endBpm: 130,
     stopAtEnd: false,
     barsPerCell: 1,
-    tempoStep: 'cell' as TempoStep,
+    tempoStep: 'bar' as TempoStep,
     points: [
       { bar: 0, bpm: 100 },
       { bar: 8, bpm: 160 },
