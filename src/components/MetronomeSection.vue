@@ -84,7 +84,7 @@ function resize() {
   const cw = container.value.clientWidth
   w.value = cw - tempoColumnWidth - padding * 2
   // w.value = 320
-  h.value = 518
+  h.value = 592
   //h.value = Math.min(window.innerHeight * 0.7, cw * 1.5)
 }
 
