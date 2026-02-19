@@ -82,10 +82,10 @@ async function handleInstall() {
 
     <Header />
 
-    <div class="flex flex-col gap-4 w-full">
-      <BeatIndicator />
+    <div class="flex flex-col gap-3.5 w-full">
+ <MetronomeSection :cols="16" :rows="37" :playhead-bar="store.visualBar" />
 
-      <MetronomeSection :cols="16" :rows="37" :playhead-bar="store.visualBar" />
+     <BeatIndicator />
 
       <div class="flex gap-3 justify-center items-center px-3">
         <MyButton
