@@ -66,12 +66,12 @@ const handleDelete = (index: number) => {
 
         <div class="flex gap-2 flex-shrink-0">
           <MyButton
-            icon="solar:folder-open-bold"
+            icon="solar:folder-open-outline"
             class="!py-1.5"
             @click="handleLoad(p)"
           />
           <MyButton
-            icon="solar:trash-bin-trash-bold"
+            icon="solar:trash-bin-minimalistic-linear"
             severity="danger"
             class="!py-1.5"
             @click="handleDelete(i)"
