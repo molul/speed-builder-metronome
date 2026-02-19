@@ -65,7 +65,7 @@ const handleDelete = (index: number) => {
         :key="i"
         class="flex items-center justify-between p-3 rounded-md bg-zinc-100 dark:bg-zinc-800/50 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
       >
-        <span class="font-medium text-zinc-900 dark:text-white truncate mr-4">{{
+        <span class="font-medium text-zinc-900 dark:text-white truncate mr-4 text-sm">{{
           p.name
         }}</span>
 
