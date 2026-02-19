@@ -19,8 +19,10 @@ const currentBeatInBar = computed(() => {
         :class="[
           'w-full border rounded-full transition-colors duration-300 h-3',
           {
-            'bg-green-400 border-green-500': currentBeatInBar === i - 1,
-            'bg-zinc-700 border-zinc-600': currentBeatInBar !== i - 1
+            'bg-green-500 dark:bg-green-400 border-green-700 dark:border-green-500':
+              currentBeatInBar === i - 1,
+            'bg-zinc-400 dark:bg-zinc-700 border-zinc-500 dark:border-zinc-600':
+              currentBeatInBar !== i - 1
           }
         ]"
       >

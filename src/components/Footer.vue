@@ -7,7 +7,7 @@
       href="https://www.luismorcilloluque.com"
       rel="noopener noreferrer"
       target="_blank"
-      class="text-blue-300 hover:underline"
+      class="text-blue-500 dark:text-blue-300 hover:underline"
     >
       Luis Morcillo Luque
     </a>

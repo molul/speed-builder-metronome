@@ -13,12 +13,12 @@ const model = defineModel<string>()
   <div class="flex gap-2 items-center justify-between w-full">
     <Label :label="props.label" class="w-30 text-left" />
 
-    <SelectButton v-model="model" :options="props.options" class="!rounded-lg">
+    <SelectButton v-model="model" :options="props.options" class="">
       <template #option="{ option }">
         <span
           :class="[
             'text-sm font-bold',
-            option === model ? 'text-white' : 'text-zinc-400'
+            option === model ? 'text-zinc-600 dark:text-white' : 'text-zinc-400'
           ]"
           >Every {{ option }}</span
         >

@@ -8,9 +8,9 @@ const getRowBgClass = (rowIndex: number) => {
   const bpm = store.rowToBpm(rowIndex)
   const { startBpm, peakBpm, endBpm } = store.config
 
-  if (bpm === startBpm) return 'bg-green-400'
-  if (bpm === peakBpm) return 'bg-red-400'
-  if (bpm === endBpm) return 'bg-yellow-400'
+  if (bpm === startBpm) return 'bg-green-600 dark:bg-green-400'
+  if (bpm === peakBpm) return 'bg-red-700 dark:bg-red-400'
+  if (bpm === endBpm) return 'bg-yellow-600 dark:bg-yellow-400'
 
   return ''
 }
@@ -21,15 +21,23 @@ const getRowBgClass = (rowIndex: number) => {
     <div
       v-for="r in store.rows + 1"
       :key="r"
-      class="text-[11px] text-white flex items-center justify-end pr-0.5 relative font-semibold leading-tight"
-      :style="{ width: '24px', height: height / store.rows + 'px' }"
+      class="text-[11px] flex items-center justify-end pr-0.5 relative font-semibold leading-tight"
+      :style="{
+        width: store.temposColumnWidth + 'px',
+        height: height / store.rows + 'px'
+      }"
     >
       <div
         class="absolute top-0 left-0 size-full z-0 rounded-l-xs"
         :class="getRowBgClass(r - 1)"
       />
 
-      <span :class="['z-30 ', { 'text-zinc-900': getRowBgClass(r - 1) !== '' }]">
+      <span
+        :class="[
+          'z-30 ',
+          { 'text-white dark:text-zinc-900': getRowBgClass(r - 1) !== '' }
+        ]"
+      >
         {{ store.rowToBpm(r) + 5 }}
       </span>
     </div>

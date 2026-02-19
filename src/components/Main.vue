@@ -65,50 +65,59 @@ async function handleInstall() {
 
 <template>
   <div
-    class="size-full sm:h-auto mx-auto sm:rounded-lg flex flex-col gap-0 relative p-0 sm:border border-zinc-700 shadow-md overflow-hidden"
+    class="size-full text-sm text-zinc-900 dark:text-zinc-100 transition-colors duration-500"
   >
-    <!-- <InstallPrompt /> -->
+    <div class="size-full sm:max-w-sm sm:m-auto flex overflow-y-auto">
+      <div
+        class="size-full sm:rounded-lg flex flex-col gap-0 relative p-0 sm:border border-zinc-700 shadow-md overflow-hidden bg-white dark:bg-zinc-900"
+      >
+        <div
+          v-if="installPrompt"
+          class="flex items-center justify-between p-3 bg-blue-200 dark:bg-zinc-800 border-b border-transparent dark:border-zinc-700"
+        >
+          <div class="flex items-center gap-2.5">
+            <div class="p-0 bg-white rounded-lg">
+              <Icon icon="solar:download-square-bold" class="text-blue-400 size-8" />
+            </div>
+            <span class="text-sm font-semibold text-zinc-800 dark:text-zinc-200"
+              >Install for offline use</span
+            >
+          </div>
 
-    <div
-      v-if="installPrompt"
-      class="flex items-center justify-between p-3 bg-zinc-800 border-b border-zinc-700"
-    >
-      <div class="flex items-center gap-3">
-        <div class="p-2 bg-blue-500/10 rounded-lg">
-          <Icon icon="solar:download-square-bold" class="text-blue-400 size-6" />
+          <MyButton label="Install" @click="handleInstall" class="!py-1" />
         </div>
-        <span class="text-sm font-semibold text-zinc-200">Install for offline use</span>
+
+        <Header />
+
+        <div class="flex flex-col gap-2 w-full py-3">
+          <MetronomeSection
+            :cols="16"
+            :rows="37"
+            :playhead-bar="store.visualBar"
+            class=""
+          />
+
+          <div class="flex gap-3 justify-between items-center px-4">
+            <MyButton
+              v-if="!store.isRunning"
+              icon="solar:play-bold"
+              size="big"
+              @click="start"
+            />
+            <MyButton
+              v-if="store.isRunning"
+              icon="solar:stop-bold"
+              severity="danger"
+              size="big"
+              @click="stop"
+            />
+
+            <BeatIndicator />
+          </div>
+
+          <Footer />
+        </div>
       </div>
-
-      <MyButton label="Install" @click="handleInstall" class="!py-1" />
-    </div>
-
-    <Header />
-
-    <div class="flex flex-col gap-2 w-full py-3">
-      <!-- <BeatIndicator /> -->
-
-      <MetronomeSection :cols="16" :rows="37" :playhead-bar="store.visualBar" class="" />
-
-      <div class="flex gap-3 justify-between items-center px-4">
-        <MyButton
-          v-if="!store.isRunning"
-          icon="solar:play-bold"
-          size="big"
-          @click="start"
-        />
-        <MyButton
-          v-if="store.isRunning"
-          icon="solar:stop-bold"
-          severity="danger"
-          size="big"
-          @click="stop"
-        />
-
-        <BeatIndicator />
-      </div>
-
-      <Footer />
     </div>
   </div>
 </template>

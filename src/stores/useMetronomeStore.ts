@@ -32,7 +32,7 @@ export const useMetronomeStore = defineStore('metronome', () => {
 
   const config = reactive<MetronomeConfig>(defaultConfig)
 
-  const temposColumnWidth = ref(25)
+  const temposColumnWidth = ref(26)
   const metronomeSectionPadding = ref(16)
 
   const rows = 37 // Total number of 5-BPM steps from 40 to 225

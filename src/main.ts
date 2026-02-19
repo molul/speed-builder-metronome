@@ -36,7 +36,11 @@ app.use(createPinia())
 app.use(PrimeVue, {
   ripple: true,
   theme: {
-    preset: MyPreset
+    preset: MyPreset,
+    options: {
+      // This is the magic line for PrimeVue 4
+      darkModeSelector: '.dark'
+    }
   }
 })
 

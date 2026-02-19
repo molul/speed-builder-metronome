@@ -52,7 +52,10 @@ const handleDelete = (index: number) => {
 
 <template>
   <div class="flex flex-col gap-4 max-h-[60vh]">
-    <div v-if="presets.length === 0" class="text-center py-8 text-zinc-500 italic">
+    <div
+      v-if="presets.length === 0"
+      class="text-center py-8 text-zinc-600 dark:text-zinc-500 italic"
+    >
       No saved presets found.
     </div>
 
@@ -60,9 +63,11 @@ const handleDelete = (index: number) => {
       <div
         v-for="(p, i) in presets"
         :key="i"
-        class="flex items-center justify-between p-3 rounded-md bg-zinc-800/50 hover:bg-zinc-800"
+        class="flex items-center justify-between p-3 rounded-md bg-zinc-300/50 dark:bg-zinc-800/50 hover:bg-zinc-400/50 dark:hover:bg-zinc-800 transition-colors"
       >
-        <span class="font-medium text-white truncate mr-4">{{ p.name }}</span>
+        <span class="font-medium text-zinc-900 dark:text-white truncate mr-4">{{
+          p.name
+        }}</span>
 
         <div class="flex gap-2 flex-shrink-0">
           <MyButton

@@ -4,7 +4,7 @@ import SettingsDialog from './SettingsDialog.vue'
 import { useDialog } from 'primevue/usedialog'
 import MyButton from './MyButton.vue'
 import { useMetronomeStore } from '../stores/useMetronomeStore'
-import InfoModal from './InfoModal.vue'
+import InfoDialog from './InfoDialog.vue'
 import PresetsDialog from './PresetsDialog.vue'
 import metronomeIconUrl from '@/assets/metronome-favicon.svg'
 import SavePresetDialog from './SavePresetDialog.vue'
@@ -45,10 +45,10 @@ const handleShowSettingsDialog = () => {
 }
 
 // ----------------------------------------
-// handleShowInfoModal
+// handleShowInfoDialog
 // ----------------------------------------
-const handleShowInfoModal = () => {
-  dialog.open(InfoModal, {
+const handleShowInfoDialog = () => {
+  dialog.open(InfoDialog, {
     props: {
       dismissableMask: true,
       header: 'Info',
@@ -134,7 +134,7 @@ function handleOpenSaveModal() {
           icon="solar:info-circle-linear"
           severity="secondary"
           :disabled="store.isRunning"
-          @click="handleShowInfoModal"
+          @click="handleShowInfoDialog"
         />
       </div>
     </div>

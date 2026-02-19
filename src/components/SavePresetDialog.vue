@@ -69,7 +69,7 @@ const saveToStorage = () => {
 <template>
   <div class="flex flex-col gap-6 pt-2">
     <div class="flex flex-col gap-2">
-      <span class="text-sm font-medium text-zinc-300 tracking-wider"
+      <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300"
         >Save New Preset</span
       >
       <div class="flex gap-2">
@@ -86,12 +86,12 @@ const saveToStorage = () => {
     <hr class="border-zinc-700" />
 
     <div class="flex flex-col gap-2">
-      <span class="text-sm font-medium text-zinc-300 tracking-wider"
+      <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300"
         >Overwrite Existing</span
       >
       <div
         v-if="presets.length === 0"
-        class="text-zinc-500 italic text-xs py-4 text-center"
+        class="text-zinc-600 dark:text-zinc-500 italic text-xs py-4 text-center"
       >
         No presets saved yet.
       </div>
@@ -100,10 +100,12 @@ const saveToStorage = () => {
           v-for="(p, i) in presets"
           :key="i"
           @click="openConfirmOverwrite(p, i)"
-          class="text-sm flex items-center justify-between p-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors text-left group cursor-pointer"
+          class="text-sm flex items-center justify-between p-3 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded-md transition-colors text-left group cursor-pointer"
         >
           <span class="font-medium">{{ p.name }}</span>
-          <span class="text-xs text-zinc-400 group-hover:text-zinc-300">
+          <span
+            class="text-xs text-zinc-700 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-300"
+          >
             Click to overwrite
           </span>
         </button>

@@ -8,6 +8,7 @@ import SelectButtonControl from './SelectButtonControl.vue'
 import CheckBoxControl from './CheckboxControl.vue'
 import { useDialog } from 'primevue/usedialog'
 import SavePresetDialog from './SavePresetDialog.vue' // Import the new component
+import ToggleThemeButton from './ToggleThemeButton.vue'
 
 const store = useMetronomeStore()
 const presets = reactive<MetronomePreset[]>(
@@ -45,6 +46,7 @@ type BpmKey = keyof typeof labels
 
 <template>
   <div class="flex w-full flex-col rounded-lg gap-4 text-sm transition-all">
+    <ToggleThemeButton />
     <div class="flex flex-col gap-3">
       <SliderControl
         v-for="key in (Object.keys(labels) as BpmKey[])"

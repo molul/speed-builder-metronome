@@ -18,9 +18,8 @@ interface Props {
 const props = defineProps<Props>()
 const store = useMetronomeStore()
 
-const tempoColumnWidth = 24
-const padding = 16
 const container = ref<HTMLDivElement | null>(null)
+const padding = 16
 const w = ref(300)
 const h = ref(500)
 
@@ -82,7 +81,7 @@ onUnmounted(() => {
 function resize() {
   if (!container.value) return
   const cw = container.value.clientWidth
-  w.value = cw - tempoColumnWidth - padding * 2
+  w.value = cw - store.temposColumnWidth - padding * 2
   // w.value = 320
   h.value = 555
   //h.value = Math.min(window.innerHeight * 0.7, cw * 1.5)
@@ -194,7 +193,7 @@ const svgPt = (p: GridPoint) => ({
         @mouseleave="up"
         @touchmove="move"
         @touchend="up"
-        class="w-full overflow-visible select-none touch-pan-y bg-zinc-800"
+        class="w-full overflow-visible select-none touch-pan-y bg-zinc-100 dark:bg-zinc-800"
       >
         <g class="background-stripes">
           <rect
@@ -204,11 +203,11 @@ const svgPt = (p: GridPoint) => ({
             y="0"
             :width="4 * cellW"
             :height="h"
-            :class="i % 2 === 0 ? 'fill-transparent' : 'fill-white/6'"
+            :class="i % 2 === 0 ? 'fill-transparent' : 'fill-black/10 dark:fill-white/6'"
           />
         </g>
 
-        <g class="stroke-white/25" stroke-width="1">
+        <g class="stroke-zinc-500/50 dark:stroke-white/25" stroke-width="1">
           <line
             v-for="c in cols + 1"
             :key="c"
@@ -233,7 +232,7 @@ const svgPt = (p: GridPoint) => ({
           y="0"
           :width="cellW"
           :height="h"
-          class="fill-green-500/20"
+          class="fill-green-400/20 dark:fill-green-500/20"
         />
 
         <line
@@ -243,7 +242,7 @@ const svgPt = (p: GridPoint) => ({
           :x2="playheadX"
           :y2="h"
           stroke-width="2"
-          class="stroke-green-500"
+          class="stroke-green-600 dark:stroke-green-500"
         />
 
         <line
@@ -252,12 +251,12 @@ const svgPt = (p: GridPoint) => ({
           :y1="draggedPointPos.y"
           :x2="draggedPointPos.x"
           :y2="draggedPointPos.y"
-          stroke-width="2"
+          stroke-width="3"
           stroke-dasharray="6 6"
-          class="stroke-blue-300 pointer-events-none"
+          class="stroke-blue-500 dark:stroke-blue-300 pointer-events-none"
         />
 
-        <g stroke-width="3" class="stroke-zinc-200">
+        <g stroke-width="3" class="stroke-zinc-600 dark:stroke-zinc-200">
           <line
             v-for="(s, i) in segments"
             :key="i"
@@ -273,16 +272,16 @@ const svgPt = (p: GridPoint) => ({
           :key="i"
           :cx="svgPt(p).x"
           :cy="svgPt(p).y"
-          r="12"
+          r="10"
           :class="[
             { 'cursor-pointer': !store.isRunning },
             store.isRunning
-              ? 'fill-zinc-400'
+              ? 'fill-zinc-400 stroke-zinc-700 stroke-4 dark:fill-zinc-400 dark:stroke-zinc-400'
               : i === 0
-              ? 'fill-green-400'
+              ? 'fill-green-400 stroke-green-700 stroke-4 dark:fill-green-400 dark:stroke-green-400'
               : i === 1
-              ? 'fill-red-400'
-              : 'fill-yellow-400'
+              ? 'fill-red-400 stroke-red-700 stroke-4 dark:fill-red-400 dark:stroke-red-400'
+              : 'fill-yellow-400 stroke-yellow-700 stroke-4 dark:fill-yellow-400 dark:stroke-yellow-400'
           ]"
           @mousedown="down(i)"
           @touchstart.prevent="down(i)"

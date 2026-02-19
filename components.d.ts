@@ -20,6 +20,7 @@ declare module 'vue' {
     ConfirmOverwriteDialog: typeof import('./src/components/ConfirmOverwriteDialog.vue')['default']
     Footer: typeof import('./src/components/Footer.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
+    InfoDialog: typeof import('./src/components/InfoDialog.vue')['default']
     InfoModal: typeof import('./src/components/InfoModal.vue')['default']
     InstallPrompt: typeof import('./src/components/InstallPrompt.vue')['default']
     Label: typeof import('./src/components/Label.vue')['default']
@@ -40,6 +41,7 @@ declare module 'vue' {
     Slider: typeof import('primevue/slider')['default']
     SliderControl: typeof import('./src/components/SliderControl.vue')['default']
     TempoVariables: typeof import('./src/components/TempoVariables.vue')['default']
+    ToggleThemeButton: typeof import('./src/components/ToggleThemeButton.vue')['default']
   }
   export interface GlobalDirectives {
     Tooltip: typeof import('primevue/tooltip')['default']
