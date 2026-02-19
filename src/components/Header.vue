@@ -92,7 +92,7 @@ function handleOpenSaveModal() {
 <template>
   <div
     ref="containerRef"
-    class="flex flex-col gap-3 px-4 py-4.5 pl-2.5 relative z-50 rounded-t-lg border-b border-zinc-300 dark:border-zinc-700"
+    class="flex flex-col gap-3 px-4 py-4.5 pl-2.5 relative z-50 rounded-t-lg border-b border-zinc-400 dark:border-zinc-700"
   >
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-1.5">
