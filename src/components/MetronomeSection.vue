@@ -177,13 +177,6 @@ const svgPt = (p: GridPoint) => ({
 
 <template>
   <div ref="container" class="w-full flex px-4 py-1 relative">
-    <span
-      v-if="store.isRunning"
-      class="font-bold text-4xl px-3 text-white text-center absolute bg-black/50 rounded-md bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20"
-    >
-      {{ store.currentBpm }}
-    </span>
-
     <MetronomeTempos :height="h" />
 
     <div class="w-full" :style="{ transform: 'translateY(' + cellH / 2 + 'px)' }">
@@ -195,7 +188,9 @@ const svgPt = (p: GridPoint) => ({
         @mouseleave="up"
         @touchmove.prevent="move"
         @touchend="up"
-        class="w-full overflow-visible select-none touch-none bg-zinc-800"
+        :class="[
+          'w-full overflow-visible select-none touch-none transition-colors duration-500 bg-zinc-800'
+        ]"
       >
         <g class="background-stripes">
           <rect
@@ -205,7 +200,7 @@ const svgPt = (p: GridPoint) => ({
             y="0"
             :width="4 * cellW"
             :height="h"
-            :class="i % 2 === 0 ? 'fill-transparent' : 'fill-white/7'"
+            :class="i % 2 === 0 ? 'fill-transparent' : 'fill-white/6'"
           />
         </g>
 

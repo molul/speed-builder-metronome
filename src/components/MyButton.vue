@@ -29,8 +29,9 @@ const props = withDefaults(defineProps<Props>(), {
     :fluid="props.fullWidth"
     :class="[
       '!text-sm',
-      shape === 'rounded' ? '!rounded-full !aspect-square' : '!rounded-md',
-      { '!size-16 text-3xl': props.size === 'big' }
+      { '!rounded-full !aspect-square': shape === 'rounded' },
+      { '!rounded-md': shape === 'square' && props.size === 'normal' },
+      { '!size-15 text-3xl !rounded-xl': props.size === 'big' }
     ]"
     :pt="{
       root: 'bg-blue-600 justify-center items-center hover:bg-blue-500 active:bg-blue-600 flex gap-2.5 !text-xs',
@@ -41,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
       <Icon
         v-if="props.icon"
         :icon="props.icon"
-        :class="[props.size === 'big' ? 'size-7' : 'size-5']"
+        :class="['', props.size === 'big' ? 'size-7 ' : 'size-5']"
       />
     </template>
   </Button>

@@ -86,26 +86,26 @@ async function handleInstall() {
     <Header />
 
     <div class="flex flex-col gap-2 w-full py-3">
-      <BeatIndicator />
+      <!-- <BeatIndicator /> -->
 
       <MetronomeSection :cols="16" :rows="37" :playhead-bar="store.visualBar" class="" />
 
-      <div class="flex gap-3 justify-center items-center px-3">
+      <div class="flex gap-3 justify-between items-center px-4">
         <MyButton
           v-if="!store.isRunning"
           icon="solar:play-bold"
           size="big"
-          shape="rounded"
           @click="start"
         />
         <MyButton
           v-if="store.isRunning"
           icon="solar:stop-bold"
           severity="danger"
-          shape="rounded"
           size="big"
           @click="stop"
         />
+
+        <BeatIndicator />
       </div>
 
       <Footer />

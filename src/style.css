@@ -11,9 +11,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body {
-    background-color: #18181b;
-  }
+html,
+body {
+  background-color: #18181b;
+}
 
 body {
   margin: 0;
