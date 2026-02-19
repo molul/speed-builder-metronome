@@ -83,7 +83,7 @@ const saveToStorage = () => {
       </div>
     </div>
 
-    <hr class="border-zinc-700" />
+    <hr class="border-zinc-400" />
 
     <div class="flex flex-col gap-2">
       <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300"
