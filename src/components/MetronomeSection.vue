@@ -176,7 +176,7 @@ const svgPt = (p: GridPoint) => ({
 </script>
 
 <template>
-  <div ref="container" class="w-full flex px-4 relative">
+  <div ref="container" class="w-full flex px-4 py-1 relative">
     <span
       v-if="store.isRunning"
       class="font-bold text-4xl px-3 text-white text-center absolute bg-black/50 rounded-md bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20"
@@ -197,7 +197,7 @@ const svgPt = (p: GridPoint) => ({
         @touchend="up"
         class="w-full overflow-visible select-none touch-none bg-zinc-800"
       >
-        <g class="stroke-zinc-500">
+        <g class="stroke-zinc-500" stroke-width="1">
           <line
             v-for="c in cols + 1"
             :key="c"
@@ -246,7 +246,7 @@ const svgPt = (p: GridPoint) => ({
           class="stroke-blue-300 pointer-events-none"
         />
 
-        <g stroke-width="2" class="stroke-white">
+        <g stroke-width="3" class="stroke-zinc-200">
           <line
             v-for="(s, i) in segments"
             :key="i"

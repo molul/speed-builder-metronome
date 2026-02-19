@@ -5,6 +5,7 @@ import { useMetronomeStore } from '../stores/useMetronomeStore'
 import MyButton from './MyButton.vue'
 import Header from './Header.vue'
 import BeatIndicator from './BeatIndicator.vue'
+import Footer from './Footer.vue'
 import { Icon } from '@iconify/vue'
 import { ref, onMounted } from 'vue'
 
@@ -64,8 +65,10 @@ async function handleInstall() {
 
 <template>
   <div
-    class="size-full lg:h-auto mx-auto lg:rounded-lg flex flex-col gap-0 relative p-0 lg:border border-zinc-700 shadow-md"
+    class="size-full lg:h-auto mx-auto lg:rounded-lg flex flex-col gap-3 relative p-0 lg:border border-zinc-700 shadow-md"
   >
+    <!-- <InstallPrompt /> -->
+
     <div
       v-if="installPrompt"
       class="flex items-center justify-between p-3 rounded-t-lg bg-zinc-800 border-b border-zinc-700"
@@ -82,10 +85,10 @@ async function handleInstall() {
 
     <Header />
 
-    <div class="flex flex-col gap-3.5 w-full">
- <MetronomeSection :cols="16" :rows="37" :playhead-bar="store.visualBar" />
+    <div class="flex flex-col gap-2 w-full">
+      <BeatIndicator />
 
-     <BeatIndicator />
+      <MetronomeSection :cols="16" :rows="37" :playhead-bar="store.visualBar" class="" />
 
       <div class="flex gap-3 justify-center items-center px-3">
         <MyButton
@@ -104,19 +107,8 @@ async function handleInstall() {
           @click="stop"
         />
       </div>
-
-      <div class="text-xs text-center font-medium p-4 pt-0">
-        Developed by
-        <a
-          href="https://www.luismorcilloluque.com"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="text-blue-300 hover:underline"
-        >
-          Luis Morcillo Luque
-        </a>
-        with Vue 3 © 2026
-      </div>
     </div>
+
+    <Footer />
   </div>
 </template>

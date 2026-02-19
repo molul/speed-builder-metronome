@@ -77,7 +77,7 @@ const handleShowPresetsModal = () => {
 <template>
   <div
     ref="containerRef"
-    class="flex flex-col gap-3 px-4 py-6 pl-2.5 relative z-50 rounded-t-lg"
+    class="flex flex-col gap-3 px-4 py-5 pl-2.5 relative z-50 rounded-t-lg border-b border-zinc-700"
   >
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-2">
@@ -104,7 +104,7 @@ const handleShowPresetsModal = () => {
           :disabled="store.isRunning"
           @click="handleShowPresetsModal"
         />
-        
+
         <MyButton
           v-tooltip.bottom="'Settings'"
           icon="solar:settings-linear"
