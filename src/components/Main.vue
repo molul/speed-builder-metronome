@@ -69,7 +69,7 @@ async function handleInstall() {
   >
     <div class="size-full sm:max-w-sm sm:m-auto flex overflow-y-auto">
       <div
-        class="size-full sm:rounded-lg flex flex-col gap-0 relative p-0 sm:border border-zinc-700 shadow-md overflow-hidden bg-white dark:bg-zinc-900"
+        class="size-full sm:rounded-lg flex flex-col gap-0 relative p-0 sm:border border-zinc-300 dark:border-zinc-700 shadow-md overflow-hidden bg-white dark:bg-zinc-900"
       >
         <div
           v-if="installPrompt"
