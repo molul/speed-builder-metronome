@@ -62,7 +62,7 @@
       </div>
     </section>
 
-    <hr class=border-zinc-300 dark:border-zinc-700" />
+    <hr class="border-zinc-300 dark:border-zinc-700" />
 
     <section class="flex flex-col gap-3">
       <h3 class="font-bold text-base flex items-center gap-2">Settings guide</h3>
