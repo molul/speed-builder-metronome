@@ -3,7 +3,7 @@
 <template>
   <div class="flex flex-col gap-5 rounded-xl text-sm leading-relaxed max-w-sm">
     <section class="flex flex-col gap-3">
-      <h3 class="font-bold text-base">The Philosophy</h3>
+      <h3 class="font-bold text-base">The philosophy</h3>
       <p class="">
         To acquire speed, you shouldn't just play at a fixed tempo. True progress happens
         when you stretch your nervous system to its limit and then "settle" into a new,
@@ -65,7 +65,7 @@
     <hr class="border-zinc-400 dark:border-zinc-800" />
 
     <section class="flex flex-col gap-3">
-      <h3 class="font-bold text-base flex items-center gap-2">Settings Guide</h3>
+      <h3 class="font-bold text-base flex items-center gap-2">Settings guide</h3>
 
       <div class="grid gap-4">
         <div>
@@ -123,10 +123,11 @@
         </div>
       </div>
     </section>
+
     <hr class="border-zinc-400 dark:border-zinc-800" />
 
     <section class="flex flex-col gap-3">
-      <h3 class="font-bold text-base">Presets Management</h3>
+      <h3 class="font-bold text-base">Presets management</h3>
       <p class="">
         In the header, you will find a
         <span class="text-blue-500 dark:text-white font-semibold italic">Presets</span>
