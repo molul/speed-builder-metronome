@@ -34,7 +34,7 @@ const getRowBgClass = (rowIndex: number) => {
 
       <span
         :class="[
-          'z-30 ',
+          'z-30 -translate-x-[1px] ',
           { 'text-white dark:text-zinc-900': getRowBgClass(r - 1) !== '' }
         ]"
       >
