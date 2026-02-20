@@ -67,7 +67,7 @@ async function handleInstall() {
   <div
     class="size-full text-sm text-zinc-900 dark:text-zinc-100 transition-colors duration-500"
   >
-    <div class="size-full sm:max-w-sm sm:m-auto flex shadow-md overflow-y-auto">
+    <div class="size-full sm:max-w-sm sm:m-auto flex sm:rounded-lg shadow-md overflow-y-auto">
       <div
         class="size-full sm:rounded-lg flex flex-col gap-0 relative p-0 sm:border border-zinc-300 dark:border-zinc-700 overflow-hidden bg-white dark:bg-zinc-900"
       >
