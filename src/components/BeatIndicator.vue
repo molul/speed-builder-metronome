@@ -17,9 +17,9 @@ const currentBeatInBar = computed(() => {
         v-for="i in 4"
         :key="`beat-${i}`"
         :class="[
-          'w-full border rounded-full transition-colors duration-300 h-3',
+          'w-full border rounded-[3px] transition-colors duration-300 h-3',
           {
-            'bg-green-500 dark:bg-green-400 border-green-700 dark:border-green-500':
+            'bg-blue-400 dark:bg-blue-400 border-blue-500 dark:border-blue-500':
               currentBeatInBar === i - 1,
             'bg-zinc-300 dark:bg-zinc-700 border-zinc-400 dark:border-zinc-600':
               currentBeatInBar !== i - 1
