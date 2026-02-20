@@ -76,7 +76,7 @@ type BpmKey = keyof typeof labels
       <CheckBoxControl label="Stop at end" v-model="store.config.stopAtEnd" />
     </div>
 
-    <hr class="border-zinc-400" />
+    <hr class="border-zinc-300 dark:border-zinc-700" />
 
     <div class="flex flex-col gap-4 w-full">
       <MyButton
