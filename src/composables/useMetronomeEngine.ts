@@ -118,10 +118,22 @@ export function useMetronomeEngine() {
         // 60 / BPM is exactly one quarter note beat
         const secondsPerBeat = 60 / activeBpm
 
-        const source = ctx!.createBufferSource()
-        source.buffer = store.beatInBar === 0 ? hiBuf! : loBuf!
-        source.connect(ctx!.destination)
-        source.start(nextBeatTime)
+        // 1. Get the current beat type from the pattern
+        const beatType = store.config.beatPattern[store.beatInBar]
+
+        // 2. Only play sound if not muted
+        if (beatType !== 'mute') {
+          const source = ctx!.createBufferSource()
+          // Determine buffer based on pattern
+          source.buffer = beatType === 'high' ? hiBuf! : loBuf!
+          source.connect(ctx!.destination)
+          source.start(nextBeatTime)
+        }
+
+        // const source = ctx!.createBufferSource()
+        // source.buffer = store.beatInBar === 0 ? hiBuf! : loBuf!
+        // source.connect(ctx!.destination)
+        // source.start(nextBeatTime)
 
         if (store.beatInBar === 0) {
           store.visualBar = store.currentBar

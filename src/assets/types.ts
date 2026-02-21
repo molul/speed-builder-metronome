@@ -1,3 +1,5 @@
+import type { BeatType } from '../stores/useMetronomeStore'
+
 export type TempoStep = 'bar' | 'cell'
 
 export interface TempoPoint {
@@ -14,6 +16,7 @@ export interface MetronomeConfig {
   beatsPerBar: number
   tempoStep: TempoStep // New Property
   points: [TempoPoint, TempoPoint, TempoPoint]
+  beatPattern: BeatType[]
 }
 
 export interface MetronomePreset extends MetronomeConfig {

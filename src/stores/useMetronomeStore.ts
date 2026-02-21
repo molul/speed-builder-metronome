@@ -7,6 +7,8 @@ import type {
   TempoStep
 } from '../assets/types'
 
+export type BeatType = 'high' | 'low' | 'mute'
+
 export const useMetronomeStore = defineStore('metronome', () => {
   const isRunning = ref(false)
   const currentBar = ref(0)
@@ -23,6 +25,7 @@ export const useMetronomeStore = defineStore('metronome', () => {
     stopAtEnd: false,
     barsPerCell: 2,
     beatsPerBar: 4,
+    beatPattern: ['high', 'low', 'low', 'low'] as BeatType[], // New property
     tempoStep: 'bar' as TempoStep,
     points: [
       { bar: 1, bpm: 100 },
@@ -71,6 +74,32 @@ export const useMetronomeStore = defineStore('metronome', () => {
     config.barsPerCell = p.barsPerCell
     config.beatsPerBar = p.beatsPerBar || 4
     config.tempoStep = p.tempoStep || 'cell'
+
+    // FIX: Deep copy if it exists, otherwise generate new
+    if (p.beatPattern) {
+      config.beatPattern = JSON.parse(JSON.stringify(p.beatPattern))
+    } else {
+      config.beatPattern = Array(config.beatsPerBar)
+        .fill('low')
+        .map((_, i) => (i === 0 ? 'high' : 'low'))
+    }
+  }
+
+  function toggleBeat(index: number) {
+    const cycle: BeatType[] = ['high', 'low', 'mute']
+
+    // 1. Grab the current value, ensuring it's not undefined
+    const current = config.beatPattern[index]
+    if (!current) return // Safety guard
+
+    // 2. Find the next value in the cycle
+    const currentIndex = cycle.indexOf(current)
+    const next = cycle[(currentIndex + 1) % cycle.length]
+
+    // 3. Cast 'next' to BeatType or use a fallback
+    if (next) {
+      config.beatPattern[index] = next
+    }
   }
 
   function reset() {
@@ -86,6 +115,10 @@ export const useMetronomeStore = defineStore('metronome', () => {
       { bar: 8, bpm: 160 },
       { bar: 12, bpm: 130 }
     ]
+
+    config.beatPattern = Array(config.beatsPerBar)
+      .fill('low')
+      .map((_, i) => (i === 0 ? 'high' : 'low'))
   }
 
   // Sync BPM changes (from buttons/inputs) to the points array
@@ -105,6 +138,18 @@ export const useMetronomeStore = defineStore('metronome', () => {
     }))
   )
 
+  watch(
+    () => config.beatsPerBar,
+    newCount => {
+      while (config.beatPattern.length < newCount) {
+        config.beatPattern.push('low')
+      }
+      if (config.beatPattern.length > newCount) {
+        config.beatPattern = config.beatPattern.slice(0, newCount)
+      }
+    }
+  )
+
   return {
     dragging,
     beatInBar,
@@ -119,6 +164,7 @@ export const useMetronomeStore = defineStore('metronome', () => {
     gridPoints,
     updatePoints,
     reset,
+    toggleBeat,
     loadPreset,
     bpmToRow,
     rowToBpm

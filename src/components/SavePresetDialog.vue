@@ -23,7 +23,9 @@ const handleSaveNew = () => {
   const newPreset = {
     ...store.config,
     name: newName.value,
-    points: JSON.parse(JSON.stringify(store.config.points))
+    // Deep copy both arrays so they don't stay linked to the live store
+    points: JSON.parse(JSON.stringify(store.config.points)),
+    beatPattern: JSON.parse(JSON.stringify(store.config.beatPattern))
   }
 
   presets.value.push(newPreset)
@@ -52,7 +54,8 @@ const openConfirmOverwrite = (preset: any, index: number) => {
         presets.value[index] = {
           ...store.config,
           name: preset.name,
-          points: JSON.parse(JSON.stringify(store.config.points))
+          points: JSON.parse(JSON.stringify(store.config.points)),
+          beatPattern: JSON.parse(JSON.stringify(store.config.beatPattern)) // Add this
         }
         saveToStorage()
         closeDialog()
