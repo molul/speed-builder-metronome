@@ -4,6 +4,7 @@
   <div class="flex flex-col gap-5 rounded-xl text-sm leading-relaxed max-w-sm">
     <section class="flex flex-col gap-3">
       <h3 class="font-bold text-base">The philosophy</h3>
+
       <p class="">
         To acquire speed, you shouldn't just play at a fixed tempo. True progress happens
         when you stretch your nervous system to its limit and then "settle" into a new,
@@ -83,6 +84,13 @@
           <p class="text-xs leading-normal">
             Determines the "length" of each horizontal block. Increasing this makes the
             total exercise longer.
+          </p>
+        </div>
+
+        <div>
+          <span class="font-semibold block mb-1">Beats per bar</span>
+          <p class="text-xs leading-normal">
+            Select how many beats you want to play per bar, from 1 to 9.
           </p>
         </div>
 

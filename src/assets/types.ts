@@ -11,6 +11,7 @@ export interface MetronomeConfig {
   endBpm: number
   stopAtEnd: boolean
   barsPerCell: number
+  beatsPerBar: number
   tempoStep: TempoStep // New Property
   points: [TempoPoint, TempoPoint, TempoPoint]
 }

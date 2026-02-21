@@ -131,7 +131,7 @@ export function useMetronomeEngine() {
         nextBeatTime += secondsPerBeat
 
         store.beatInBar++
-        if (store.beatInBar >= 4) {
+        if (store.beatInBar >= store.config.beatsPerBar) {
           store.beatInBar = 0
           store.currentBar++
         }

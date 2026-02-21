@@ -71,9 +71,14 @@ type BpmKey = keyof typeof labels
             : undefined
         "
       />
-    </div>
 
-    <div class="flex flex-col gap-4">
+      <SliderControl
+        label="Beats per bar"
+        v-model="store.config.beatsPerBar"
+        :min="1"
+        :max="9"
+      />
+
       <SliderControl
         label="Bars per cell"
         v-model="store.config.barsPerCell"

@@ -5,16 +5,19 @@ import { useMetronomeStore } from '../stores/useMetronomeStore'
 const store = useMetronomeStore()
 
 const currentBeatInBar = computed(() => {
-  return store.beatInBar === 0 ? 3 : store.beatInBar - 1
+  return store.beatInBar === 0 ? store.config.beatsPerBar - 1 : store.beatInBar - 1
 })
 </script>
 
 <template>
   <div class="flex-1 flex gap-1 flex-col items-end">
-    <span class="text-4xl font-black font-mono"> {{ store.currentBpm }} </span>
+    <span class="text-4xl font-black font-mono">
+      {{ store.currentBpm }}
+    </span>
+
     <div class="flex gap-2 flex-1 size-full">
       <div
-        v-for="i in 4"
+        v-for="i in store.config.beatsPerBar"
         :key="`beat-${i}`"
         :class="[
           'w-full border rounded-[3px] transition-colors duration-300 h-3',
