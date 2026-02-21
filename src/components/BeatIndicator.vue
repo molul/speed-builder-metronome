@@ -10,8 +10,8 @@ const currentBeatInBar = computed(() => {
 </script>
 
 <template>
-  <div class="flex-1 flex gap-1 flex-col items-end">
-    <span class="text-4xl font-black font-mono">
+  <div class="flex-1 flex flex-col gap-2 items-end h-15 justify-end">
+    <span class="text-4xl font-black font-monocode leading-none translate-y-1">
       {{ store.currentBpm }}
     </span>
 
@@ -20,7 +20,7 @@ const currentBeatInBar = computed(() => {
         v-for="i in store.config.beatsPerBar"
         :key="`beat-${i}`"
         :class="[
-          'w-full border rounded-[3px] transition-colors duration-300 h-3',
+          'w-full h-4 border rounded-[3px] transition-colors duration-300',
           {
             'bg-blue-400 dark:bg-blue-400 border-blue-500 dark:border-blue-500':
               currentBeatInBar === i - 1,

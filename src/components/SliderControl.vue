@@ -42,7 +42,7 @@ function handleSlideEnd() {
         @slideend="handleSlideEnd"
       />
       <span
-        class="w-10 text-right font-mono"
+        class="w-10 text-right font-monocode font-bold"
         :class="{
           'text-orange-500 font-bold':
             (props.externalMin && model < props.externalMin) ||

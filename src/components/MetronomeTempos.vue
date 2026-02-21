@@ -21,7 +21,7 @@ const getRowBgClass = (rowIndex: number) => {
     <div
       v-for="r in store.rows + 1"
       :key="r"
-      class="text-[11px] flex items-center justify-end pr-0.5 relative font-semibold leading-tight"
+      class="text-[11px] flex items-center justify-end pr-0.5 relative leading-tight"
       :style="{
         width: store.temposColumnWidth + 'px',
         height: height / store.rows + 'px'
@@ -34,7 +34,7 @@ const getRowBgClass = (rowIndex: number) => {
 
       <span
         :class="[
-          'z-30 -translate-x-[1px] ',
+          'z-30 -translate-x-[1px] translate-y-[1px] font-bold font-monocode',
           { 'text-white dark:text-zinc-900': getRowBgClass(r - 1) !== '' }
         ]"
       >
